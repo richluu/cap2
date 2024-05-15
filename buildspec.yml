@@ -20,4 +20,4 @@ phases:
       - echo Writing image definitions file...
       - printf '[{"name":"rilreact","imageUri":"962804699607.dkr.ecr.us-west-2.amazonaws.com/ril-ecr:latest"}]' > imagedefinitions.json
 artifacts:
-files: imagedefinitions.json
+  files: imagedefinitions.json
