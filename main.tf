@@ -6,8 +6,8 @@ terraform {
     }
   }
   backend "s3" {
-  # Replace this with your bucket name
-  bucket = aws_s3_bucket.terraform_state.id
+  # Replace this with your bucket name.  Cannot use vars
+  bucket = ril-cap2-tf-state
   key = "global/s3/terraform.tfstate"
   region = "us-west-2"
   encrypt = true
@@ -50,11 +50,12 @@ resource "aws_s3_bucket" "terraform_state" {
   }
 }
 
-resource "aws_s3_bucket_versioning" "enable" {
+resource "aws_s3_bucket_versioning" "enabled" {
   bucket = aws_s3_bucket.terraform_state.id
   versioning_configuration {
     status = "Enabled"
   }
+}
   
 resource "aws_s3_bucket_server_side_encryption_configuration" "default" {
   bucket = aws_s3_bucket.terraform_state.id
