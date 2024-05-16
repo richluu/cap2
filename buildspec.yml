@@ -1,4 +1,8 @@
 version: 0.2
+env:
+  secrets-manager:
+    ACCESS_KEY: "arn:aws:secretsmanager:us-west-2:962804699607:secret:rilCap2Secrets-q4A1DK:ril_key_id"
+    SECRET_KEY: "arn:aws:secretsmanager:us-west-2:962804699607:secret:rilCap2Secrets-q4A1DK:ril_access_key"
 phases:
   install:
     commands:
@@ -19,6 +23,10 @@ phases:
       # - docker tag ril-ecr:latest 962804699607.dkr.ecr.us-west-2.amazonaws.com/ril-ecr:latest 
       - echo "Building infrastructure with Terraform"
       - ls -ltr
+      - export AWS_ACCESS_KEY_ID=$ACCESS_KEY
+      - export AWS_SECRET_ACCESS_KEY=$SECRET_KEY
+      - export AWS_REGION="us-west-2"
+      - aws sts get-caller-identity
       - terraform init
       - terraform apply --auto-approve    
   post_build:
