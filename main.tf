@@ -11,7 +11,10 @@ terraform {
   bucket = "devint-ril"
   key = "global/s3/terraform.tfstate"
   region = "us-west-2"
-  encrypt = true
+  #encrypt = true
+  assume_role = {
+    role_arn = "arn:aws:iam::962804699607:role/rilCodeBuildRole"
+  }
   }
 }
 
@@ -42,44 +45,44 @@ resource "aws_ecr_repository" "my_first_ecr_repo" {
   name = "ril-cap2-ecr"
 }
 
-resource "aws_s3_bucket" "terraform_state" {
-  bucket = "ril-cap2-tf-state"
+#resource "aws_s3_bucket" "terraform_state" {
+#  bucket = "ril-cap2-tf-state"
 
-  #Prevent accidental deletion of S3 bucket
-  lifecycle {
-    prevent_destroy = true
-  }
-}
+#  #Prevent accidental deletion of S3 bucket
+#  lifecycle {
+#    prevent_destroy = true
+#  }
+#}
 
-resource "aws_s3_bucket_versioning" "enabled" {
-  bucket = aws_s3_bucket.terraform_state.id
-  versioning_configuration {
-    status = "Enabled"
-  }
-}
+#resource "aws_s3_bucket_versioning" "enabled" {
+#  bucket = aws_s3_bucket.terraform_state.id
+#  versioning_configuration {
+#    status = "Enabled"
+#  }
+#}
   
-resource "aws_s3_bucket_server_side_encryption_configuration" "default" {
-  bucket = aws_s3_bucket.terraform_state.id
+#resource "aws_s3_bucket_server_side_encryption_configuration" "default" {
+#  bucket = aws_s3_bucket.terraform_state.id
 
-  rule {
-    apply_server_side_encryption_by_default {
-      sse_algorithm = "AES256"
-    }
-  }
-}  
+#  rule {
+#    apply_server_side_encryption_by_default {
+#      sse_algorithm = "AES256"
+#    }
+#  }
+#}  
 
-resource "aws_s3_bucket_public_access_block" "public_access" {
-  bucket                  = aws_s3_bucket.terraform_state.id
-  block_public_acls       = true
-  block_public_policy     = true
-  ignore_public_acls      = true
-  restrict_public_buckets = true
-}
+#resource "aws_s3_bucket_public_access_block" "public_access" {
+#  bucket                  = aws_s3_bucket.terraform_state.id
+#  block_public_acls       = true
+#  block_public_policy     = true
+#  ignore_public_acls      = true
+#  restrict_public_buckets = true
+#}
 
-output "s3_bucket_arn" {
-  value       = aws_s3_bucket.terraform_state.arn
-  description = "The ARN of the S3 bucket"
-}
+#output "s3_bucket_arn" {
+#  value       = aws_s3_bucket.terraform_state.arn
+#  description = "The ARN of the S3 bucket"
+#}
 
 resource "aws_ecs_cluster" "my_cluster" {
   name = "rilCap2Cluster" # Naming the cluster
