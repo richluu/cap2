@@ -13,7 +13,7 @@ terraform {
   region = "us-west-2"
   #encrypt = true
   assume_role = {
-    role_arn = "arn:aws:iam::962804699607:instance-profile/RIL-EC2InstanceRole"
+    role_arn = "arn:aws:iam::962804699607:role/RIL-EC2InstanceRole"
   }
   }
 }
