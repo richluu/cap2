@@ -7,14 +7,12 @@ terraform {
   }
   backend "s3" {
   # Replace this with your bucket name.  Cannot use vars
-  bucket = "ril-cap2-tf-state"
+  #bucket = "ril-cap2-tf-state"
+  bucket = "devint-ril"
   key = "global/s3/terraform.tfstate"
   region = "us-west-2"
   encrypt = true
   }
-    depends_on = [
-	  aws_s3_bucket.terraform_state,
-	]
 }
 
 # Configure the AWS Provider
