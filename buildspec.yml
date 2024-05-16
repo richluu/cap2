@@ -2,24 +2,34 @@ version: 0.2
 phases:
   install:
     commands:
-      - echo install step...
+      # - echo install step...
+      - echo "Installing Terraform"
+      - curl -o terraform.zip https://releases.hashicorp.com/terraform/1.8.3/terraform_1.8.3_linux_amd64.zip
+      - unzip terraform.zip
+      - chmod +x terraform
+      - mv terraform /usr/local/bin/
   pre_build:
     commands:
-      - echo logging in to AWS ECR...
-      - aws ecr get-login-password --region us-west-2 | docker login --username AWS --password-stdin 962804699607.dkr.ecr.us-west-2.amazonaws.com
+      # - echo logging in to AWS ECR...
+      # - aws ecr get-login-password --region us-west-2 | docker login --username AWS --password-stdin 962804699607.dkr.ecr.us-west-2.amazonaws.com
   build:
     commands:
-      - echo build Docker image on `date`
-      - docker build -t ril-ecr .
-      - docker tag ril-ecr:latest 962804699607.dkr.ecr.us-west-2.amazonaws.com/ril-ecr:latest 
+      # - echo build Docker image on `date`
+      # - docker build -t ril-ecr .
+      # - docker tag ril-ecr:latest 962804699607.dkr.ecr.us-west-2.amazonaws.com/ril-ecr:latest 
+      - echo "Building infrastructure with Terraform"
+      - ls -ltr
+      - terraform init
+      - terraform apply --auto-approve    
   post_build:
     commands:
-      - echo build Docker image complete `date`
-      - echo push latest Docker images to ECR...
-      - docker push 962804699607.dkr.ecr.us-west-2.amazonaws.com/ril-ecr:latest
-      - echo Writing image definitions file...
-      - printf '[{"name":"rilreact","imageUri":"962804699607.dkr.ecr.us-west-2.amazonaws.com/ril-ecr:latest"}]' > imagedefinitions.json
-artifacts:
-  files: imagedefinitions.json
+      # - echo build Docker image complete `date`
+      # - echo push latest Docker images to ECR...
+      # - docker push 962804699607.dkr.ecr.us-west-2.amazonaws.com/ril-ecr:latest
+      # - echo Writing image definitions file...
+      # - printf '[{"name":"rilreact","imageUri":"962804699607.dkr.ecr.us-west-2.amazonaws.com/ril-ecr:latest"}]' > imagedefinitions.json
+      - echo Terraform complete `date`
+# artifacts:
+#   files: imagedefinitions.json
 
 #Comment To Retrigger Build and Deploy
