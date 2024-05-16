@@ -7,7 +7,7 @@ terraform {
   }
   backend "s3" {
   # Replace this with your bucket name.  Cannot use vars
-  bucket = ril-cap2-tf-state
+  bucket = "ril-cap2-tf-state"
   key = "global/s3/terraform.tfstate"
   region = "us-west-2"
   encrypt = true
