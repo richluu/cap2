@@ -19,10 +19,10 @@ terraform {
 }
 
 # Configure the AWS Provider
-provider "aws" {
-    profile = "default"
-    region="us-west-2"
-}
+#provider "aws" {
+#    profile = "default"
+#    region="us-west-2"
+#}
 
 # Providing a reference to our default VPC
 resource "aws_default_vpc" "default_vpc" {
