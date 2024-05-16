@@ -12,9 +12,9 @@ terraform {
   key = "global/s3/terraform.tfstate"
   region = "us-west-2"
   #encrypt = true
-  assume_role = {
-    role_arn = "arn:aws:iam::962804699607:role/RIL-EC2InstanceRole"
-  }
+  #assume_role = {
+  #  role_arn = "arn:aws:iam::962804699607:role/RIL-EC2InstanceRole"
+  #}
   }
 }
 
