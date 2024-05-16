@@ -12,6 +12,9 @@ terraform {
   region = "us-west-2"
   encrypt = true
   }
+    depends_on = [
+	  aws_s3_bucket.terraform_state,
+	]
 }
 
 # Configure the AWS Provider
