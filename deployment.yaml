@@ -2,20 +2,20 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app.kubernetes.io/name: ril-eks
-    app.kubernetes.io/instance: ril-eks-instance
+    app.kubernetes.io/name: ril-eks-2
+    app.kubernetes.io/instance: ril-eks-2-instance
     app.kubernetes.io/version: '1.0.0'
     app.kubernetes.io/managed-by: kubectl
-  name: ril-eks-deployment
+  name: ril-eks-2-deployment
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: ril-eks
+      app: ril-eks-2
   template:
     metadata:
       labels:
-        app: ril-eks
+        app: ril-eks-2
     spec:
       containers:
         - image: 962804699607.dkr.ecr.us-west-2.amazonaws.com/ril-ecr:latest

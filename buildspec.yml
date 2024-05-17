@@ -3,7 +3,7 @@ phases:
   install:
     commands:
       - echo Installing app dependencies...
-      - curl -o kubectl https://amazon-eks.s3.us-west-2.amazonaws.com/1.18.9/2020-11-02/bin/linux/amd64/kubectl
+      - curl -O https://s3.us-west-2.amazonaws.com/amazon-eks/1.28.8/2024-04-19/bin/linux/amd64/kubectl
       - chmod +x ./kubectl
       - mkdir -p $HOME/bin && cp ./kubectl $HOME/bin/kubectl && export PATH=$PATH:$HOME/bin
       - echo 'export PATH=$PATH:$HOME/bin' >> ~/.bashrc
@@ -13,7 +13,7 @@ phases:
   pre_build:
     commands:
       - echo Logging into Amazon EKS...
-      - aws eks --region us-west-2 update-kubeconfig --name ril-eks
+      - aws eks --region us-west-2 update-kubeconfig --name ril-eks-2
       - echo check config
       - kubectl config view --minify
       - echo check kubectl access

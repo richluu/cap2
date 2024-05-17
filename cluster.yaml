@@ -2,7 +2,7 @@ apiVersion: eksctl.io/v1alpha5
 kind: ClusterConfig
 
 metadata:
-  name: ril-eks #cluster name
+  name: ril-eks-2 #cluster name
   region: us-west-2 #desired region
 
 nodeGroups:
