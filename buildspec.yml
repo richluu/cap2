@@ -1,43 +1,33 @@
 version: 0.2
-env:
-  secrets-manager:
-    ACCESS_KEY: "arn:aws:secretsmanager:us-west-2:962804699607:secret:rilCap2Secrets-q4A1DK:ril_key_id"
-    SECRET_KEY: "arn:aws:secretsmanager:us-west-2:962804699607:secret:rilCap2Secrets-q4A1DK:ril_access_key"
 phases:
   install:
     commands:
-      # - echo install step...
-      - echo "Installing Terraform"
-      - curl -o terraform.zip https://releases.hashicorp.com/terraform/1.8.3/terraform_1.8.3_linux_amd64.zip
-      - unzip terraform.zip
-      - chmod +x terraform
-      - mv terraform /usr/local/bin/
+      - echo Installing app dependencies...
+      - curl -o kubectl https://amazon-eks.s3.us-west-2.amazonaws.com/1.18.9/2020-11-02/bin/linux/amd64/kubectl
+      - chmod +x ./kubectl
+      - mkdir -p $HOME/bin && cp ./kubectl $HOME/bin/kubectl && export PATH=$PATH:$HOME/bin
+      - echo 'export PATH=$PATH:$HOME/bin' >> ~/.bashrc
+      - source ~/.bashrc
+      - echo 'Check kubectl version'
+      - kubectl version --short --client
   pre_build:
     commands:
-      # - echo logging in to AWS ECR...
-      # - aws ecr get-login-password --region us-west-2 | docker login --username AWS --password-stdin 962804699607.dkr.ecr.us-west-2.amazonaws.com
+      - echo Logging into Amazon EKS...
+      - aws eks --region us-west-2 update-kubeconfig --name ril-eks
+      - echo check config
+      - kubectl config view --minify
+      - echo check kubectl access
+      - kubectl get svc
+      - echo logging in to AWS ECR...
+      - aws ecr get-login-password --region us-west-2 | docker login --username AWS --password-stdin 962804699607.dkr.ecr.us-west-2.amazonaws.com
   build:
     commands:
-      # - echo build Docker image on `date`
-      # - docker build -t ril-ecr .
-      # - docker tag ril-ecr:latest 962804699607.dkr.ecr.us-west-2.amazonaws.com/ril-ecr:latest 
-      - echo "Building infrastructure with Terraform"
-      - ls -ltr
-      - export AWS_ACCESS_KEY_ID=$ACCESS_KEY
-      - export AWS_SECRET_ACCESS_KEY=$SECRET_KEY
-      - export AWS_REGION="us-west-2"
-      - aws sts get-caller-identity
-      - terraform init
-      - terraform apply --auto-approve    
+      - docker build -t ril-ecr .
   post_build:
     commands:
-      # - echo build Docker image complete `date`
-      # - echo push latest Docker images to ECR...
-      # - docker push 962804699607.dkr.ecr.us-west-2.amazonaws.com/ril-ecr:latest
-      # - echo Writing image definitions file...
-      # - printf '[{"name":"rilreact","imageUri":"962804699607.dkr.ecr.us-west-2.amazonaws.com/ril-ecr:latest"}]' > imagedefinitions.json
-      - echo Terraform complete `date`
-# artifacts:
-#   files: imagedefinitions.json
-
-#Comment To Retrigger Build and Deploy
+      - docker tag ril-ecr:latest 962804699607.dkr.ecr.us-west-2.amazonaws.com/ril-ecr:latest
+      - docker push 962804699607.dkr.ecr.us-west-2.amazonaws.com/ril-ecr:latest
+      - kubectl apply -f deployment.yaml
+      - kubectl apply -f service.yaml
+      - kubectl rollout restart -f deployment.yaml
+      - kubectl get svc --all-namespaces
